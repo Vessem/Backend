@@ -1,5 +1,4 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import Database from '../services/Database';
 
 export default class UserModel extends Model {
 	declare id: number;

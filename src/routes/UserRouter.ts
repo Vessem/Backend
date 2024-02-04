@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/:id', async (req: Request<{ id: number }>, res: Response) => {
 	try {
 		const user = await db.userService.getUserById(req.params.id);
-		res.status(200).send(user);
+		res.status(200).type('application/json').send(user);
 	} catch (e) {
 		if (e instanceof BadRequestError) res.sendStatus(400);
 		else if (e instanceof NotFoundError) res.sendStatus(404);

@@ -1,6 +1,9 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import csrf from 'csurf';
 import cors from 'cors';
+import helmet from 'helmet';
 // Routers
 import * as user from './routes/UserRouter';
 
@@ -18,6 +21,10 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(csrf({ cookie: true }));
+app.use(helmet());
+app.disable('x-powered-by');
 
 // Configure routes
 app.use('/users', user.default);

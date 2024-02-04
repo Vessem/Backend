@@ -4,8 +4,8 @@ import logger from './Logger';
 
 export class Database {
 	public connected: boolean = false;
-	private readonly sequelize: Sequelize;
 	public userService: UserService;
+	private readonly sequelize: Sequelize;
 
 	constructor() {
 		// Create database connection
