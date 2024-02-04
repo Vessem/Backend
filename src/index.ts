@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import csrf from 'csurf';
+// import csrf from 'csurf';
 import cors from 'cors';
 import helmet from 'helmet';
 import session from 'express-session';

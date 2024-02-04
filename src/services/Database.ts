@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import UserService from './UserService';
 import logger from './Logger';
+import dotenv from 'dotenv';
 
 export class Database {
 	public connected: boolean = false;
@@ -8,11 +9,14 @@ export class Database {
 	private readonly sequelize: Sequelize;
 
 	constructor() {
+		// Load env
+		dotenv.config();
+
 		// Create database connection
 		this.sequelize = new Sequelize(
-			process.env.MYSQL_DATABASE || 'vessem',
-			process.env.MYSQL_USERNAME || 'root',
-			process.env.MYSQL_PASSWORD || 'testpassword',
+			process.env.MYSQL_DATABASE || '',
+			process.env.MYSQL_USERNAME || '',
+			process.env.MYSQL_PASSWORD || '',
 			{
 				host: 'localhost',
 				port: 3306,

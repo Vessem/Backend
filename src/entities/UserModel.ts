@@ -1,6 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import _ from 'lodash';
-import logger from '../services/Logger';
 
 export default class UserModel extends Model {
 	declare id: number;
