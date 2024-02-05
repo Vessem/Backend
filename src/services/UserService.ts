@@ -3,7 +3,6 @@ import { Op, Sequelize } from 'sequelize';
 import NotFoundError from '../errors/NotFoundError';
 import BadRequestError from '../errors/BadRequestError';
 import LIMITS from '../constants/LIMITS';
-import logger from './Logger';
 
 export default class UserService {
 	constructor(sequelize: Sequelize) {
@@ -54,8 +53,6 @@ export default class UserService {
 			return Promise.reject(
 				new BadRequestError(`property 'amount' cannot be bigger than ${LIMITS.ENTITIES_PER_PAGE_LIMIT}`),
 			);
-
-		logger.info(typeof options.amount);
 
 		// Query
 		const result = await UserModel.findAll({
