@@ -2,6 +2,8 @@ import UserModel, { UserModelInit } from '../entities/UserModel';
 import { Op, Sequelize } from 'sequelize';
 import NotFoundError from '../errors/NotFoundError';
 import BadRequestError from '../errors/BadRequestError';
+import LIMITS from '../constants/LIMITS';
+import logger from './Logger';
 
 export default class UserService {
 	constructor(sequelize: Sequelize) {
@@ -24,26 +26,52 @@ export default class UserService {
 		return Promise.resolve(result);
 	}
 
-	async getUsersByParams(body: { level: number; createdAt: Date; username: string }): Promise<UserModel[]> {
+	/**
+	 * Get users by parameters, pagination starts at 0
+	 * @param level
+	 * @param createdAt
+	 * @param username
+	 * @param options
+	 */
+	async getUsersByParams(
+		level: number,
+		createdAt: Date,
+		username: string,
+		options: { page: number; amount: number } = { page: 0, amount: 10 },
+	): Promise<UserModel[]> {
 		// Data check
-		if (body.level < 0) return Promise.reject(new BadRequestError(`property 'level' cannot be smaller than 0`));
-		if (body.level > 100) return Promise.reject(new BadRequestError(`property 'level' cannot be bigger than 100`));
-		if (body.createdAt < new Date())
+		if (level < 0) return Promise.reject(new BadRequestError(`property 'level' cannot be smaller than 0`));
+		if (level > 100) return Promise.reject(new BadRequestError(`property 'level' cannot be bigger than 100`));
+
+		if (createdAt < new Date())
 			return Promise.reject(new BadRequestError(`property 'createdAt' cannot be in the future`));
+
+		if (options.page < 0) return Promise.reject(new BadRequestError(`property 'page' cannot be smaller than 0`));
+
+		if (options.amount < 0)
+			return Promise.reject(new BadRequestError(`property 'amount' cannot be smaller than 0`));
+		if (options.amount > LIMITS.ENTITIES_PER_PAGE_LIMIT)
+			return Promise.reject(
+				new BadRequestError(`property 'amount' cannot be bigger than ${LIMITS.ENTITIES_PER_PAGE_LIMIT}`),
+			);
+
+		logger.info(typeof options.amount);
 
 		// Query
 		const result = await UserModel.findAll({
 			where: {
 				username: {
-					[Op.like]: `%${body.username}%`,
+					[Op.like]: `%${username}%`,
 				},
 				createdAt: {
-					[Op.gte]: body.createdAt,
+					[Op.gte]: createdAt,
 				},
 				level: {
-					[Op.gte]: body.level,
+					[Op.gte]: level,
 				},
 			},
+			limit: options.amount,
+			offset: options.page * options.amount,
 		});
 
 		// Result check
