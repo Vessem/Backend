@@ -2,10 +2,12 @@ import { Sequelize } from 'sequelize';
 import UserService from './UserService';
 import logger from './Logger';
 import dotenv from 'dotenv';
+import AuthService from './AuthService';
 
 export class Database {
 	public connected: boolean = false;
 	public userService: UserService;
+	public authService: AuthService;
 	private readonly sequelize: Sequelize;
 
 	constructor() {
@@ -27,6 +29,7 @@ export class Database {
 
 		// Setup all services and models
 		this.userService = new UserService(this.sequelize);
+		this.authService = new AuthService(this.sequelize);
 
 		// Connect to database
 		this.sequelize

@@ -4,6 +4,7 @@ import BadRequestError from '../errors/BadRequestError';
 import NotFoundError from '../errors/NotFoundError';
 import logger from '../services/Logger';
 import HTTP_STATUS from '../constants/HTTP_STATUS';
+
 const router = express.Router();
 
 /**
@@ -44,26 +45,8 @@ async function getUsersByParams(req: Request, res: Response) {
 	}
 }
 
-async function createNewUser(req: Request, res: Response) {
-	try {
-		const user = await db.userService.createNewUser({
-			username: req.body.username,
-			email: req.body.email,
-			password: req.body.password,
-		});
-		res.status(HTTP_STATUS.CREATED).type('application/json').send(user);
-	} catch (e) {
-		if (e instanceof BadRequestError) res.sendStatus(HTTP_STATUS.BAD_REQUEST);
-		else {
-			logger.error(e);
-			res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR);
-		}
-	}
-}
-
 // Register routes
 router.get('/:id', getUserById);
 router.post('/query', getUsersByParams);
-router.post('/', createNewUser);
 
 export default router;
