@@ -5,7 +5,7 @@ const router = express.Router();
 
 async function logout(req: Request, res: Response) {
 	req.logout({}, () => {
-		res.redirect(process.env.FRONTEND_URL ?? '/');
+		res.redirect(`${process.env.FRONTEND_URL}/logout` ?? '/');
 	});
 }
 
@@ -15,7 +15,7 @@ router.get(
 	'/google/callback',
 	passport.authenticate('google', {
 		failureRedirect: '/error',
-		successReturnToOrRedirect: `${process.env.FRONTEND_URL}`,
+		successReturnToOrRedirect: `${process.env.FRONTEND_URL}/success`,
 	}),
 	(req, res, next) => {},
 );

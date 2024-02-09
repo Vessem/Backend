@@ -25,6 +25,7 @@ export function AuthModelInit(sequelize: Sequelize) {
 			},
 			provider: {
 				type: DataTypes.ENUM(...Object.keys(PROVIDER)),
+				primaryKey: true,
 				allowNull: false,
 				comment: 'The provider used the gain the token',
 			},
