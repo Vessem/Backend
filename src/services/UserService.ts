@@ -74,26 +74,4 @@ export default class UserService {
 		// Result check
 		return Promise.resolve(result);
 	}
-
-	async createNewUser(body: {
-		password: string | undefined;
-		email: string | undefined;
-		username: string | undefined;
-	}): Promise<UserModel> {
-		// Data check
-		if (!body.password) return Promise.reject(new BadRequestError(`property 'password' is a required field`));
-		if (!body.email) return Promise.reject(new BadRequestError(`property 'email' is a required field`));
-		if (!body.username) return Promise.reject(new BadRequestError(`property 'username' is a required field`));
-
-		// Query
-		const result = await UserModel.create({
-			username: body.username,
-			email: body.email,
-			password: body.email,
-			salt: 'TEST_SALT',
-		});
-
-		// Result check
-		return Promise.resolve(result);
-	}
 }

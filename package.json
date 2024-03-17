@@ -29,6 +29,8 @@
 		"@types/express-session": "^1.17.10",
 		"@types/lodash": "^4.14.202",
 		"@types/node": "^20.11.16",
+		"@types/passport": "^1.0.16",
+		"@types/passport-google-oauth": "^1.0.45",
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
 		"cookie-parser": "^1.4.6",
@@ -40,6 +42,8 @@
 		"helmet": "^7.1.0",
 		"lodash": "^4.17.21",
 		"mysql2": "^3.9.1",
+		"passport": "^0.7.0",
+		"passport-google-oauth": "^2.0.0",
 		"sequelize": "^6.36.0",
 		"typescript": "^5.3.3",
 		"winston": "^3.11.0"

@@ -4,16 +4,14 @@ import _ from 'lodash';
 export default class UserModel extends Model {
 	declare id: number;
 	declare username: string;
-	declare email: string;
-	declare password: string;
-	declare salt: string;
+	declare email?: string;
 	declare level: number;
 	declare createdAt: Date;
 	declare updatedAt: Date;
 }
 
 // List of field names to exclude from the json
-const jsonExclude = ['email', 'password', 'salt'];
+const jsonExclude = ['email'];
 
 export function UserModelInit(sequelize: Sequelize) {
 	UserModel.init(
@@ -32,18 +30,8 @@ export function UserModelInit(sequelize: Sequelize) {
 			},
 			email: {
 				type: DataTypes.STRING,
-				allowNull: false,
+				allowNull: true,
 				comment: 'The users email',
-			},
-			password: {
-				type: DataTypes.STRING,
-				allowNull: false,
-				comment: 'The users password hashed with Argon2',
-			},
-			salt: {
-				type: DataTypes.STRING,
-				allowNull: false,
-				comment: 'The salt used when hashing the password',
 			},
 			level: {
 				type: DataTypes.TINYINT,

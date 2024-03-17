@@ -4,6 +4,8 @@ import BadRequestError from '../errors/BadRequestError';
 import NotFoundError from '../errors/NotFoundError';
 import logger from '../services/Logger';
 import HTTP_STATUS from '../constants/HTTP_STATUS';
+import { authorize } from 'passport';
+import UnauthorizedError from '../errors/UnauthorizedError';
 import LIMITS from '../constants/LIMITS';
 const router = express.Router();
 
@@ -57,16 +59,18 @@ async function getUsersByParams(
 	}
 }
 
-async function createNewUser(req: Request, res: Response) {
+async function getCurrentUser(req: Request, res: Response) {
 	try {
-		const user = await db.userService.createNewUser({
-			username: req.body.username,
-			email: req.body.email,
-			password: req.body.password,
-		});
-		res.status(HTTP_STATUS.CREATED).type('application/json').send(user);
+		if (!req.user) {
+			res.sendStatus(HTTP_STATUS.UNAUTHORIZED);
+			return;
+		}
+		// @ts-expect-error req.user.id is valid
+		const user = await db.userService.getUserById(req.user.id);
+		res.status(HTTP_STATUS.OK).type('application/json').send(user);
 	} catch (e) {
 		if (e instanceof BadRequestError) res.sendStatus(HTTP_STATUS.BAD_REQUEST);
+		else if (e instanceof NotFoundError) res.sendStatus(HTTP_STATUS.NOT_FOUND);
 		else {
 			logger.error(e);
 			res.sendStatus(HTTP_STATUS.INTERNAL_SERVER_ERROR);
@@ -75,8 +79,8 @@ async function createNewUser(req: Request, res: Response) {
 }
 
 // Register routes
+router.get('/current', db.authService.isLoggedIn, getCurrentUser);
 router.get('/:id', getUserById);
 router.post('/query', getUsersByParams);
-router.post('/', createNewUser);
 
 export default router;
