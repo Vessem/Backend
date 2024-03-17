@@ -6,7 +6,7 @@ import logger from '../services/Logger';
 import HTTP_STATUS from '../constants/HTTP_STATUS';
 import { authorize } from 'passport';
 import UnauthorizedError from '../errors/UnauthorizedError';
-
+import LIMITS from '../constants/LIMITS';
 const router = express.Router();
 
 /**
@@ -28,14 +28,26 @@ async function getUserById(req: Request<{ id: number }>, res: Response) {
 	}
 }
 
-async function getUsersByParams(req: Request, res: Response) {
+async function getUsersByParams(
+	req: Request<
+		{},
+		{},
+		{ level: number; username: string; createdAt: Date },
+		{ page: number | undefined; amount: number | undefined }
+	>,
+	res: Response,
+) {
 	try {
 		// Get users
-		const user = await db.userService.getUsersByParams({
-			username: req.body?.username || '',
-			level: req.body?.level || '',
-			createdAt: req.body?.createdAt || '',
-		});
+		const user = await db.userService.getUsersByParams(
+			req.body.level || 0,
+			req.body?.createdAt || '',
+			req.body?.username || '',
+			{
+				page: req.query.page || 0,
+				amount: Number(req.query.amount) || LIMITS.ENTITIES_PER_PAGE_LIMIT, // req.query.amount is a string for some reason???
+			},
+		);
 
 		res.status(HTTP_STATUS.OK).type('application/json').send(user);
 	} catch (e) {
