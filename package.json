@@ -58,5 +58,6 @@
 	},
 	"lint-staged": {
 		"**/*": "prettier --write --ignore-unknown"
-	}
+	},
+	"packageManager": "yarn@4.5.0"
 }
