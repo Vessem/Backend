@@ -1,4 +1,3 @@
-import { Error } from 'sequelize';
 import logger from '../services/Logger';
 
 export default class BadRequestError implements Error {
