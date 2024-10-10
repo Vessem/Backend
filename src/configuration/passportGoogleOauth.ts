@@ -1,9 +1,8 @@
-import { Express } from 'express';
 import { OAuth2Strategy } from 'passport-google-oauth';
 import passport from 'passport';
 import db from '../services/Database';
 
-export default function configurePassportGoogleOauth(app: Express) {
+export default function configurePassportGoogleOauth() {
 	passport.use(
 		new OAuth2Strategy(
 			{

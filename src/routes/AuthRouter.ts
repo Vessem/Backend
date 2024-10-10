@@ -5,7 +5,7 @@ const router = express.Router();
 
 async function logout(req: Request, res: Response) {
 	req.logout({}, () => {
-		res.redirect(`${process.env.FRONTEND_URL}/logout` ?? '/');
+		res.redirect(process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/logout` : '/');
 	});
 }
 

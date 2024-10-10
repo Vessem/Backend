@@ -27,7 +27,7 @@ configureExpress(app);
 configureCookieParser(app);
 configureSession(app);
 configurePassport(app);
-configurePassportGoogleOauth(app);
+configurePassportGoogleOauth();
 // configureCsrf(app);
 
 // Configure routes

@@ -3,6 +3,7 @@ import UserService from './UserService';
 import logger from './Logger';
 import dotenv from 'dotenv';
 import AuthService from './AuthService';
+import { toNumber } from 'lodash';
 
 export class Database {
 	public connected: boolean = false;
@@ -16,12 +17,12 @@ export class Database {
 
 		// Create database connection
 		this.sequelize = new Sequelize(
-			process.env.MYSQL_DATABASE || '',
-			process.env.MYSQL_USERNAME || '',
-			process.env.MYSQL_PASSWORD || '',
+			(process.env.MYSQL_DATABASE as string) ?? '',
+			(process.env.MYSQL_USERNAME as string) ?? 'root',
+			(process.env.MYSQL_PASSWORD as string) ?? '',
 			{
-				host: 'localhost',
-				port: 3306,
+				host: (process.env.MYSQL_HOST as string) ?? 'localhost',
+				port: toNumber(process.env.MYSQL_PORT) ?? 3306,
 				dialect: 'mysql',
 				logging: (msg) => logger.debug(msg),
 			},
@@ -57,7 +58,7 @@ export class Database {
 			await this.sequelize.sync({ alter: true });
 			return Promise.resolve();
 		} catch (e) {
-			return Promise.reject(e);
+			return Promise.reject(e as Error);
 		}
 	}
 
@@ -70,7 +71,7 @@ export class Database {
 			return Promise.resolve();
 		} catch (e) {
 			this.connected = false;
-			return Promise.reject(e);
+			return Promise.reject(e as Error);
 		}
 	}
 
@@ -82,7 +83,7 @@ export class Database {
 			await this.sequelize.close();
 			return Promise.resolve();
 		} catch (e) {
-			return Promise.reject(e);
+			return Promise.reject(e as Error);
 		}
 	}
 }
